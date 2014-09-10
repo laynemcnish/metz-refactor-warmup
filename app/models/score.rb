@@ -2,39 +2,20 @@ class Score
 
   def score(scoring_dice, game)
     @scoring_dice = scoring_dice
-
-    @tally_score = 0
-
-    tally = Tally.new(scoring_dice)
-
-    if tally.straight
-      straight_score
-    elsif tally.three_pairs
-      three_pairs_score
-    elsif tally.six_of_a_kind
-      six_of_a_kind_score
-    elsif tally.two_three_of_a_kind
-      two_three_of_a_kind_score
-    elsif tally.five_of_a_kind
-      five_of_a_kind_score
-    elsif tally.four_of_a_kind
-      four_of_a_kind_score
-    elsif tally.three_of_a_kind
-     three_of_a_kind_score
-    end
-
-    @tally_score += @scoring_dice.count('1') * 100 if @scoring_dice.count('1') > 0 && @scoring_dice.count('1') < 3
-    @scoring_dice.delete('1')
-    @tally_score += @scoring_dice.count('5') * 50 if @scoring_dice.count('5') > 0 && @scoring_dice.count('5') < 3
-    @scoring_dice.delete('5')
-
+    tally_points
     rejected_dice = @scoring_dice
-
     game.available_dice += rejected_dice.length
     @tally_score
   end
 
   private
+
+  def tally_points
+    @tally_score = 0
+    evaluate_dice
+    score_ones
+    score_fives
+  end
 
   def straight_score
     @tally_score = 1500
@@ -95,5 +76,34 @@ class Score
       @tally_score = kind.first.to_i * 100
     end
     @scoring_dice.delete(kind)
+  end
+
+  def evaluate_dice
+    tally = Tally.new(@scoring_dice)
+    if tally.straight
+      straight_score
+    elsif tally.three_pairs
+      three_pairs_score
+    elsif tally.six_of_a_kind
+      six_of_a_kind_score
+    elsif tally.two_three_of_a_kind
+      two_three_of_a_kind_score
+    elsif tally.five_of_a_kind
+      five_of_a_kind_score
+    elsif tally.four_of_a_kind
+      four_of_a_kind_score
+    elsif tally.three_of_a_kind
+      three_of_a_kind_score
+    end
+  end
+
+  def score_ones
+    @tally_score += @scoring_dice.count('1') * 100 if @scoring_dice.count('1') > 0 && @scoring_dice.count('1') < 3
+    @scoring_dice.delete('1')
+  end
+
+  def score_fives
+    @tally_score += @scoring_dice.count('5') * 50 if @scoring_dice.count('5') > 0 && @scoring_dice.count('5') < 3
+    @scoring_dice.delete('5')
   end
 end

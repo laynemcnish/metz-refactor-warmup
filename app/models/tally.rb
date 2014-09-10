@@ -2,7 +2,6 @@ class Tally
 
   def initialize(scoring_dice)
     @scoring_dice = scoring_dice
-
   end
 
   def straight
