@@ -26,7 +26,7 @@ class Game < ActiveRecord::Base
     player = current_player
     self.available_dice -= scoring_dice.length
     self.save
-    score = Score.score(scoring_dice, self)
+    score = Score.new.score(scoring_dice, self)
     player.current_score += score
     self.available_dice = 6 if self.available_dice == 0
     self.last_roll = roll_dice if scoring_dice == [] || score > 0
@@ -49,7 +49,7 @@ class Game < ActiveRecord::Base
     self.save
     player.total_score ||= 0
     player.current_score ||=0
-    player.current_score += Score.score(scoring_dice, self)
+    player.current_score += Score.new.score(scoring_dice, self)
     player.total_score += player.current_score
     player.current_score = 0
     player.save
